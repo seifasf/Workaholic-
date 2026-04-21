@@ -1,0 +1,19 @@
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# dotenv (secrets)
+.env
+.env.*
+
+# OS/editor
+.DS_Store
+.vscode/
+
+# optional build output (if added later)
+dist/
+build/

@@ -10,9 +10,9 @@
 
 1. [Render Dashboard](https://dashboard.render.com) → **New** → **Web Service**.
 2. Connect your Git repository.
-3. **Root Directory:** `backend` (if the repo contains both `frontend` and `backend`).
+3. **Root Directory:** leave empty (this repo is the backend). If you later make a monorepo, set it to the backend folder name.
 4. **Runtime:** Node.
-5. **Build Command:** `npm install`
+5. **Build Command:** `npm ci`
 6. **Start Command:** `npm start`
 7. **Instance type:** Free (cold starts ~50s after idle).
 
