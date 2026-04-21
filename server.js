@@ -16,12 +16,36 @@ const kpiRoutes = require('./routes/kpi');
 const adminRoutes = require('./routes/admin');
 const notificationRoutes = require('./routes/notifications');
 
+if (process.env.NODE_ENV === 'production') {
+  const need = ['MONGO_URI', 'JWT_SECRET', 'JWT_REFRESH_SECRET'];
+  const missing = need.filter((k) => !process.env[k]);
+  if (missing.length) {
+    console.error('FATAL: Set these env vars on Render:', missing.join(', '));
+    process.exit(1);
+  }
+}
+
+/** Comma-separated frontends, e.g. Vercel prod + preview: https://a.vercel.app,https://b.vercel.app */
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const corsOriginFn = (origin, cb) => {
+  if (!origin) return cb(null, true);
+  if (allowedOrigins.includes(origin)) return cb(null, true);
+  console.warn('CORS blocked origin:', origin);
+  cb(null, false);
+};
+
 const app = express();
+app.set('trust proxy', 1);
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: allowedOrigins.length === 1 ? allowedOrigins[0] : allowedOrigins,
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -30,10 +54,7 @@ const io = new Server(server, {
 app.set('io', io);
 
 app.use(helmet());
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
-  credentials: true,
-}));
+app.use(cors({ origin: corsOriginFn, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -61,7 +82,10 @@ cron.schedule('5 0 1 * *', async () => {
 });
 
 const PORT = process.env.PORT || 5000;
+const HOST = process.env.BIND_HOST || '0.0.0.0';
 
 connectDB().then(() => {
-  server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  server.listen(PORT, HOST, () => {
+    console.log(`Server running on http://${HOST}:${PORT}`);
+  });
 });

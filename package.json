@@ -2,11 +2,17 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "seed:users": "node scripts/seedUsers.js",
+    "seed:all": "node scripts/seedFullDatabase.js",
+    "migrate:mongo": "node scripts/migrateMongo.js"
   },
   "keywords": [],
   "author": "",

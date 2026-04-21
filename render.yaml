@@ -1,0 +1,21 @@
+# Render Blueprint — deploy from repo root with Root Directory = backend,
+# or move this file / set path in dashboard. Adjust service name as needed.
+services:
+  - type: web
+    name: workaholic-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: CLIENT_URL
+        sync: false
