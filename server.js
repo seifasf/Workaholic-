@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 /** Comma-separated frontends, e.g. Vercel prod + preview: https://a.vercel.app,https://b.vercel.app */
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+const allowedOrigins = (process.env.CLIENT_URL || 'https://workaholicc.vercel.app')
   .split(',')
   .map((s) => s.trim())
   .filter(Boolean);
