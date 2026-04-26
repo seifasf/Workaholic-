@@ -20,6 +20,20 @@ exports.markRead = async (req, res) => {
   }
 };
 
+// REST-style alias for bulk update
+exports.updateNotifications = async (req, res) => {
+  try {
+    const { read, scope } = req.body || {};
+    if (read !== true || scope !== 'all') {
+      return res.status(400).json({ message: "Use body: { read: true, scope: 'all' }" });
+    }
+    await Notification.updateMany({ userId: req.user._id, read: false }, { read: true });
+    return res.json({ message: 'Marked all as read' });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
 exports.getUnreadCount = async (req, res) => {
   try {
     const count = await Notification.countDocuments({ userId: req.user._id, read: false });

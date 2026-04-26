@@ -18,6 +18,11 @@ const getLatenessMinutes = (workStartTime) => {
 exports.clockIn = async (req, res) => {
   try {
     const { lat, lng } = req.body;
+    const latNum = parseFloat(lat);
+    const lngNum = parseFloat(lng);
+    if (!Number.isFinite(latNum) || !Number.isFinite(lngNum)) {
+      return res.status(400).json({ message: 'GPS location is required for clock-in' });
+    }
     const date = todayStr();
     const existing = await AttendanceRecord.findOne({ userId: req.user._id, date });
     if (existing?.clockIn?.time) {
@@ -25,7 +30,12 @@ exports.clockIn = async (req, res) => {
     }
 
     const ip = getClientIP(req);
-    const gpsResult = (lat && lng) ? verifyGPS(parseFloat(lat), parseFloat(lng)) : { verified: false };
+    const gpsResult = verifyGPS(latNum, lngNum);
+    if (!gpsResult.verified) {
+      return res.status(403).json({
+        message: `You must be within 2 km of office to clock in. Current distance: ${gpsResult.distanceKm.toFixed(2)} km`,
+      });
+    }
     const ipResult = await verifyIP(ip);
     const locationVerified = gpsResult.verified;
 
@@ -36,7 +46,7 @@ exports.clockIn = async (req, res) => {
       { userId: req.user._id, date },
       {
         $set: {
-          clockIn: { time: new Date(), coords: lat ? { lat, lng } : undefined, ip, ipCity: ipResult.city, ipCountry: ipResult.country },
+          clockIn: { time: new Date(), coords: { lat: latNum, lng: lngNum }, ip, ipCity: ipResult.city, ipCountry: ipResult.country },
           locationVerified,
           gpsVerified: gpsResult.verified,
           ipVerified: ipResult.verified,
@@ -102,6 +112,10 @@ exports.clockOut = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// REST-style aliases
+exports.createSession = async (req, res) => exports.clockIn(req, res);
+exports.updateTodaySession = async (req, res) => exports.clockOut(req, res);
 
 exports.getHistory = async (req, res) => {
   try {
