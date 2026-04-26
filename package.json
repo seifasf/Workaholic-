@@ -13,7 +13,7 @@
     "seed:users": "node scripts/seedUsers.js",
     "seed:all": "node scripts/seedFullDatabase.js",
     "migrate:mongo": "node scripts/migrateMongo.js",
-    "migrate:roles": "node scripts/migrateRolesEmpAdmin.js"
+    "migrate:hr-to-admin": "node scripts/migrateHrToAdmin.js"
   },
   "keywords": [],
   "author": "",

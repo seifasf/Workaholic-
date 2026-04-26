@@ -9,7 +9,7 @@ const signToken = (user) =>
     { expiresIn: '30d' }
   );
 
-// Public self-registration — always creates an emp account
+// Public self-registration — always creates an employee account
 exports.registerPublic = async (req, res) => {
   try {
     const { name, email, password, department, position, workStartTime } = req.body;
@@ -26,7 +26,7 @@ exports.registerPublic = async (req, res) => {
       name,
       email,
       password,
-      role: 'emp',
+      role: 'employee',
       department: department || '',
       position: position || '',
       workStartTime: workStartTime || '09:00',
@@ -38,10 +38,13 @@ exports.registerPublic = async (req, res) => {
   }
 };
 
-// Admin-only registration — can set any role
+// Admin-only registration — role must be employee or admin
 exports.register = async (req, res) => {
   try {
     const { name, email, password, role, department, position, workStartTime } = req.body;
+    if (role && !['employee', 'admin'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role' });
+    }
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ message: 'Email already registered' });
 

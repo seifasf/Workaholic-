@@ -70,7 +70,7 @@ const computeKPIForUser = async (userId, month, year) => {
 };
 
 const computeAllKPIs = async (month, year) => {
-  const users = await User.find({ role: 'emp', isActive: true });
+  const users = await User.find({ role: 'employee', isActive: true });
   const results = await Promise.all(users.map((u) => computeKPIForUser(u._id, month, year)));
   for (const kpi of results) {
     await User.findByIdAndUpdate(kpi.userId, { kpiScore: kpi.totalScore });

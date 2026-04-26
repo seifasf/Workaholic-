@@ -19,7 +19,7 @@ const getDashboard = async (req, res) => {
       teamKPIs,
       recentLeaves,
     ] = await Promise.all([
-      User.countDocuments({ role: 'emp', isActive: true }),
+      User.countDocuments({ role: 'employee', isActive: true }),
       AttendanceRecord.find({ date: today })
         .populate('userId', 'name department avatar position'),
       LeaveRequest.countDocuments({ status: 'pending' }),
@@ -98,6 +98,9 @@ const getUsers = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const { name, email, password, role, department, position, workStartTime } = req.body;
+    if (role && !['employee', 'admin'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role' });
+    }
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ message: 'Email already registered' });
     const user = await User.create({ name, email, password, role, department, position, workStartTime });
@@ -110,6 +113,9 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { name, role, department, position, workStartTime, vacationBalance, isActive } = req.body;
+    if (role != null && role !== '' && !['employee', 'admin'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role' });
+    }
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { name, role, department, position, workStartTime, vacationBalance, isActive },
