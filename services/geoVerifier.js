@@ -13,10 +13,9 @@ const haversineDistanceKm = (lat1, lng1, lat2, lng2) => {
 };
 
 const verifyGPS = (lat, lng) => {
-  // Default geofence: The British University in Egypt (BUE)
-  const officeLat = parseFloat(process.env.OFFICE_LAT) || 30.1177753;
-  const officeLng = parseFloat(process.env.OFFICE_LNG) || 31.605976;
-  const radiusKm = parseFloat(process.env.OFFICE_RADIUS_KM) || 2;
+  const officeLat = parseFloat(process.env.OFFICE_LAT);
+  const officeLng = parseFloat(process.env.OFFICE_LNG);
+  const radiusKm = parseFloat(process.env.OFFICE_RADIUS_KM) || 0.5;
   const distance = haversineDistanceKm(lat, lng, officeLat, officeLng);
   return { verified: distance <= radiusKm, distanceKm: distance };
 };
