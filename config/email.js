@@ -12,9 +12,10 @@ const smtpUser = process.env.EMAIL_SMTP_USER || process.env.EMAIL_USER;
 const fromAddr = process.env.EMAIL_FROM || process.env.EMAIL_USER;
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com',
-  port: 587,
+  host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
+  port: parseInt(process.env.SMTP_PORT || '587', 10),
   secure: false,
+  requireTLS: true,
   auth: {
     user: smtpUser,
     pass: process.env.EMAIL_PASS,

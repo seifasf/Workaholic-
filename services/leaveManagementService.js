@@ -24,8 +24,13 @@ const createLeave = async (req, res) => {
       endDate,
       daysRequested,
       reason,
-      proofUrl: req.file?.path || '',
-      proofPublicId: req.file?.filename || '',
+      proof: req.file
+        ? {
+            data: req.file.buffer.toString('base64'),
+            mimeType: req.file.mimetype,
+            originalName: req.file.originalname || '',
+          }
+        : undefined,
     });
 
     const hrUsers = await User.find({ role: { $in: ['hr', 'admin'] }, isActive: true });

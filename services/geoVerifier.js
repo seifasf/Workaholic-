@@ -1,5 +1,6 @@
 const axios = require('axios');
 
+// Haversine distance (great-circle) used for the geofence check.
 const toRad = (deg) => (deg * Math.PI) / 180;
 
 const haversineDistanceKm = (lat1, lng1, lat2, lng2) => {
@@ -13,7 +14,8 @@ const haversineDistanceKm = (lat1, lng1, lat2, lng2) => {
 };
 
 const verifyGPS = (lat, lng) => {
-  // Default geofence: The British University in Egypt (BUE)
+  // Geofence is configurable via env vars so each deployment can point to its own "office".
+  // Defaults are set to BUE to keep local/dev usable without extra setup.
   const officeLat = parseFloat(process.env.OFFICE_LAT) || 30.1177753;
   const officeLng = parseFloat(process.env.OFFICE_LNG) || 31.605976;
   const radiusKm = parseFloat(process.env.OFFICE_RADIUS_KM) || 2;
@@ -23,6 +25,7 @@ const verifyGPS = (lat, lng) => {
 
 const verifyIP = async (ip) => {
   try {
+    // Best-effort IP metadata enrichment. Not used to block clock-in/out (GPS is authoritative).
     const key = process.env.IPAPI_KEY;
     const url = key
       ? `https://ipapi.co/${ip}/json/?key=${key}`

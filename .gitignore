@@ -9,6 +9,7 @@ pnpm-debug.log*
 # dotenv (secrets)
 .env
 .env.*
+!.env.example
 
 # OS/editor
 .DS_Store

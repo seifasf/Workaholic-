@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 // Simple in-process cache: userId → { user, cachedAt }
+// This reduces DB reads on chatty UIs, but it's per-instance only (no cross-instance sharing on Render).
 const userCache = new Map();
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -14,6 +15,7 @@ const protect = async (req, res, next) => {
 
     if (!token) return res.status(401).json({ message: 'Not authorized, no token' });
 
+    // JWT is the source of truth for identity; we still fetch the user to enforce deactivation/role changes.
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Check in-process cache first to avoid a DB round-trip on every request

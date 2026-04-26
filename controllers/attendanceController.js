@@ -6,6 +6,8 @@ const { lateAlertEmail } = require('../services/emailService');
 
 const todayStr = () => new Date().toISOString().slice(0, 10);
 
+// Lateness is computed relative to the employee's configured start time (defaults to 09:00).
+// We intentionally keep this logic server-side so clients can't "fake" lateness by changing device time.
 const getLatenessMinutes = (workStartTime) => {
   const now = new Date();
   const [h, m] = workStartTime.split(':').map(Number);
@@ -32,10 +34,12 @@ exports.clockIn = async (req, res) => {
     const ip = getClientIP(req);
     const gpsResult = verifyGPS(latNum, lngNum);
     if (!gpsResult.verified) {
+      // Security/HR rule: clock-in is blocked unless the user is physically near the office.
       return res.status(403).json({
         message: `You must be within 2 km of office to clock in. Current distance: ${gpsResult.distanceKm.toFixed(2)} km`,
       });
     }
+    // IP verification is best-effort and informational (geo lookup may fail); do not block on it.
     const ipResult = await verifyIP(ip);
     const locationVerified = gpsResult.verified;
 
@@ -69,6 +73,7 @@ exports.clockIn = async (req, res) => {
 
     const io = req.app.get('io');
     if (io) {
+      // Broadcast so dashboards can update in real time without polling.
       io.emit('attendance:clockIn', { userId: req.user._id, name: req.user.name, time: new Date() });
     }
 

@@ -4,9 +4,9 @@ const {
   createLeave, getMyLeaves, getBalance, getAllLeaves, approveLeave, rejectLeave, reviewLeave,
 } = require('../controllers/leaveController');
 const { protect, requireRole } = require('../middleware/auth');
-const { upload } = require('../config/cloudinary');
+const { uploadProof } = require('../config/uploads');
 
-router.post('/request', protect, upload.single('proof'), createLeave);
+router.post('/request', protect, uploadProof.single('proof'), createLeave);
 router.get('/my-leaves', protect, getMyLeaves);
 router.get('/balance', protect, getBalance);
 router.get('/all', protect, requireRole('admin', 'hr'), getAllLeaves);

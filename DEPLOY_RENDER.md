@@ -3,8 +3,8 @@
 ## Prerequisites
 
 - MongoDB Atlas cluster; **Network Access** allows `0.0.0.0/0` (or Render egress IPs).
-- Brevo (or other SMTP) credentials if you use email.
-- Optional: Cloudinary for leave proof uploads.
+- **Brevo SMTP** (recommended) for transactional email — see below.
+- Leave proof files are stored **in MongoDB** (no Cloudinary).
 
 ## Create the Web Service
 
@@ -31,11 +31,20 @@ Add these in **Render → your service → Environment**:
 | `JWT_REFRESH_SECRET` | Yes | Different long random string. |
 | `CLIENT_URL` | Yes | Your Vercel URL, e.g. `https://your-app.vercel.app`. For multiple origins (preview + prod), comma-separated, no spaces: `https://a.vercel.app,https://b.vercel.app` |
 | `OFFICE_LAT` / `OFFICE_LNG` / `OFFICE_RADIUS_KM` | Recommended | Geo attendance. |
-| `EMAIL_SMTP_USER` | If email | Brevo SMTP login. |
-| `EMAIL_PASS` | If email | Brevo SMTP key. |
-| `EMAIL_FROM` | If email | Verified sender in Brevo (not `…@smtp-brevo.com`). |
+| `EMAIL_SMTP_USER` | If email | Brevo **SMTP login** (Brevo Dashboard → SMTP & API; often looks like `xxxxxx@smtp-brevo.com`). |
+| `EMAIL_PASS` | If email | Brevo **SMTP key** (same screen; keep secret — set only in Render, never commit). |
+| `EMAIL_FROM` | If email | **Verified sender** in Brevo (Senders tab) — the visible “From” address (must not be `…@smtp-brevo.com`). |
+| `SMTP_HOST` | Optional | Default `smtp-relay.brevo.com`. |
+| `SMTP_PORT` | Optional | Default `587` (STARTTLS). |
 | `IPAPI_KEY` | Optional | ipapi.co key for IP geolocation. |
-| `CLOUDINARY_*` | Optional | Leave proof uploads. |
+
+### Brevo (external SMTP) — quick setup
+
+1. Brevo → **Settings → SMTP & API** → copy **SMTP login** and **SMTP key**.
+2. Brevo → **Senders** → add/verify the address you will use as **`EMAIL_FROM`**.
+3. On Render, set `EMAIL_SMTP_USER`, `EMAIL_PASS`, `EMAIL_FROM` as in the table above.
+
+The app uses Nodemailer with **port 587 + STARTTLS** against `smtp-relay.brevo.com` (see `config/email.js`).
 
 Do **not** set `PORT` — Render injects it.
 
