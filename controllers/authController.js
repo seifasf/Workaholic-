@@ -9,7 +9,7 @@ const signToken = (user) =>
     { expiresIn: '30d' }
   );
 
-// Public self-registration — always creates an employee account
+// Public self-registration — always creates an emp account
 exports.registerPublic = async (req, res) => {
   try {
     const { name, email, password, department, position, workStartTime } = req.body;
@@ -26,7 +26,7 @@ exports.registerPublic = async (req, res) => {
       name,
       email,
       password,
-      role: 'employee',
+      role: 'emp',
       department: department || '',
       position: position || '',
       workStartTime: workStartTime || '09:00',

@@ -19,7 +19,7 @@ const getDashboard = async (req, res) => {
       teamKPIs,
       recentLeaves,
     ] = await Promise.all([
-      User.countDocuments({ role: 'employee', isActive: true }),
+      User.countDocuments({ role: 'emp', isActive: true }),
       AttendanceRecord.find({ date: today })
         .populate('userId', 'name department avatar position'),
       LeaveRequest.countDocuments({ status: 'pending' }),

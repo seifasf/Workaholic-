@@ -9,13 +9,13 @@ const { uploadProof } = require('../config/uploads');
 router.post('/request', protect, uploadProof.single('proof'), createLeave);
 router.get('/my-leaves', protect, getMyLeaves);
 router.get('/balance', protect, getBalance);
-router.get('/all', protect, requireRole('admin', 'hr'), getAllLeaves);
+router.get('/all', protect, requireRole('admin'), getAllLeaves);
 
 // REST-style endpoint
-router.patch('/:id', protect, requireRole('admin', 'hr'), reviewLeave);
+router.patch('/:id', protect, requireRole('admin'), reviewLeave);
 
 // Backward-compatible action endpoints
-router.patch('/:id/approve', protect, requireRole('admin', 'hr'), approveLeave);
-router.patch('/:id/reject', protect, requireRole('admin', 'hr'), rejectLeave);
+router.patch('/:id/approve', protect, requireRole('admin'), approveLeave);
+router.patch('/:id/reject', protect, requireRole('admin'), rejectLeave);
 
 module.exports = router;

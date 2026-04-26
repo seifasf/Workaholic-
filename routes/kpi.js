@@ -6,8 +6,8 @@ const {
 const { protect, requireRole } = require('../middleware/auth');
 
 router.get('/my-score', protect, getMyScore);
-router.get('/team', protect, requireRole('admin', 'hr'), getTeamScores);
-router.get('/report/:userId', protect, requireRole('admin', 'hr'), getUserReport);
+router.get('/team', protect, requireRole('admin'), getTeamScores);
+router.get('/report/:userId', protect, requireRole('admin'), getUserReport);
 
 // REST-style endpoint
 router.post('/runs', protect, requireRole('admin'), createComputationRun);

@@ -67,8 +67,8 @@ exports.clockIn = async (req, res) => {
         message: `You clocked in ${latenessMinutes} minutes late today.`,
         type: 'late-alert',
       });
-      const hrUsers = await User.find({ role: { $in: ['hr', 'admin'] }, isActive: true });
-      hrUsers.forEach((hr) => lateAlertEmail(hr.email, req.user, latenessMinutes).catch(() => {}));
+      const adminUsers = await User.find({ role: 'admin', isActive: true });
+      adminUsers.forEach((a) => lateAlertEmail(a.email, req.user, latenessMinutes).catch(() => {}));
     }
 
     const io = req.app.get('io');

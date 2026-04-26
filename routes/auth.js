@@ -5,7 +5,7 @@ const { protect, requireRole } = require('../middleware/auth');
 const { uploadAvatar: uploadAvatarMiddleware } = require('../config/uploads');
 
 router.post('/register', registerPublic);
-router.post('/register/admin', protect, requireRole('admin', 'hr'), register);
+router.post('/register/admin', protect, requireRole('admin'), register);
 router.post('/login', login);
 router.get('/me', protect, getMe);
 router.patch('/profile', protect, updateProfile);

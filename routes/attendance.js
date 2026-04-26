@@ -15,7 +15,7 @@ router.post('/clock-out', protect, clockOut);
 router.get('/history', protect, getHistory);
 router.get('/today', protect, getTodayStatus);
 router.get('/my-stats', protect, getMyStats);
-router.get('/live', protect, requireRole('admin', 'hr'), getLiveBoard);
-router.get('/admin', protect, requireRole('admin', 'hr'), getAdminHistory);
+router.get('/live', protect, requireRole('admin'), getLiveBoard);
+router.get('/admin', protect, requireRole('admin'), getAdminHistory);
 
 module.exports = router;

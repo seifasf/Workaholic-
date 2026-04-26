@@ -13,8 +13,8 @@ const LeaveRequest = require('../models/LeaveRequest');
 const KPIScore = require('../models/KPIScore');
 
 const USERS = [
-  { name: 'Seif', email: 'seif@workaholic.com', password: 'seif1234', role: 'employee', department: 'Engineering', position: 'Developer' },
-  { name: 'Zeina', email: 'zeinasabry2211@gmail.com', password: 'zeina1234', role: 'employee', department: 'Operations', position: 'Analyst' },
+  { name: 'Seif', email: 'seif@workaholic.com', password: 'seif1234', role: 'emp', department: 'Engineering', position: 'Developer' },
+  { name: 'Zeina', email: 'zeinasabry2211@gmail.com', password: 'zeina1234', role: 'emp', department: 'Operations', position: 'Analyst' },
   { name: 'Renad', email: 'renad@workaholic.com', password: 'renad1234', role: 'admin', department: 'HR', position: 'Administrator' },
 ];
 

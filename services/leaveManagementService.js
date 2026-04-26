@@ -33,10 +33,10 @@ const createLeave = async (req, res) => {
         : undefined,
     });
 
-    const hrUsers = await User.find({ role: { $in: ['hr', 'admin'] }, isActive: true });
+    const adminUsers = await User.find({ role: 'admin', isActive: true });
     await Notification.insertMany(
-      hrUsers.map((hr) => ({
-        userId: hr._id,
+      adminUsers.map((admin) => ({
+        userId: admin._id,
         message: `${req.user.name} submitted a ${type} leave request for ${daysRequested} day(s).`,
         type: 'general',
       }))
