@@ -1,11 +1,12 @@
-# Render Blueprint — this repo is the backend (repo root).
-# If you later convert to a monorepo, set `rootDir` accordingly.
+# Render Blueprint — deploy from repo root with Root Directory = backend,
+# or move this file / set path in dashboard. Adjust service name as needed.
 services:
   - type: web
     name: workaholic-api
     runtime: node
     plan: free
     region: frankfurt
+    rootDir: backend
     buildCommand: npm ci
     startCommand: npm start
     healthCheckPath: /api/health

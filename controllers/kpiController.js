@@ -50,3 +50,6 @@ exports.computeAll = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// REST-style alias for KPI computation run
+exports.createComputationRun = async (req, res) => exports.computeAll(req, res);
